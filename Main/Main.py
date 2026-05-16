@@ -1,7 +1,7 @@
 from TuringMachine import *
 
 def main():
-    Turing_Machine_Calling('JUAN PABLO ES UN SAPO')
+    Turing_Machine_Calling('nothing happened here')
 
 if __name__ == "__main__":
     main()
