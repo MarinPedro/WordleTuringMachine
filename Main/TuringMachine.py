@@ -23,58 +23,94 @@ def Wordle_Turing_Machine(wordle_input):
 
         # Creación de un vector que contiene todos los elementos del alfabeto excepto aquellos que forman
         # la cadena del wordle
-        wa_wout_input = list(wordle_alphabet - set(wordle_array))
+        wa_wout_input = list(tape_alphabet - set(wordle_array))
 
         # Creación de la máquina de Turing
-        wordle_tm = MNTM(
-            states={'q0', 'q1', 'q2', 'q3', 'q4', 'q5'},
-            input_symbols= wordle_alphabet,
-            tape_symbols= tape_alphabet,
-            n_tapes=2,
-            transitions={
-                'q0':{
-                    # Transición directa
-                    (wordle_array[0], '#'): [('q1', (('1', 'R'), ('-', 'R')))],
-                    # Transición para todos los elementos pertenecientes a wordle_set excepto el elemento x_i
-                    **{(current_symbol, '#'): [('q1', ((current_symbol, 'R'), (wordle_array[0], 'R')))]
-                       for current_symbol in (wordle_set - set(wordle_array[0]))},
-                    # Transición para todos los elementos no pertenecientes a wordle_set
-                    **{(current_symbol, '#'): [('q1', (('0', 'R'), (wordle_array[0], 'R')))]
-                       for current_symbol in wa_wout_input}
+        try:
+            wordle_tm = MNTM(
+                states={'q0', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'},
+                input_symbols= wordle_alphabet,
+                tape_symbols= tape_alphabet,
+                n_tapes=2,
+                transitions={
+                    'q0':{
+                        # Transición directa
+                        (wordle_array[0], '#'): [('q1', (('1', 'R'), ('-', 'R')))],
+                        # Transición para todos los elementos pertenecientes a wordle_set excepto el elemento x_i
+                        **{(tape1_symbol, '#'): [('q1', ((tape1_symbol, 'R'), (wordle_array[0], 'R')))]
+                           for tape1_symbol in (wordle_set - set(wordle_array[0]))},
+                        # Transición para todos los elementos no pertenecientes a wordle_set
+                        **{(tape1_symbol, '#'): [('q1', (('0', 'R'), (wordle_array[0], 'R')))]
+                           for tape1_symbol in wa_wout_input}
+                    },
+                    'q1':{
+                        (wordle_array[1], '#'): [('q2', (('1', 'R'), ('-', 'R')))],
+                        **{(tape1_symbol, '#'): [('q2', ((tape1_symbol, 'R'), (wordle_array[1], 'R')))]
+                           for tape1_symbol in (wordle_set - set(wordle_array[1]))},
+                        **{(tape1_symbol, '#'): [('q2', (('0', 'R'), (wordle_array[1], 'R')))]
+                           for tape1_symbol in wa_wout_input}
+                    },
+                    'q2': {
+                        (wordle_array[2], '#'): [('q3', (('1', 'R'), ('-', 'R')))],
+                        **{(tape1_symbol, '#'): [('q3', ((tape1_symbol, 'R'), (wordle_array[2], 'R')))]
+                           for tape1_symbol in (wordle_set - set(wordle_array[2]))},
+                        **{(tape1_symbol, '#'): [('q3', (('0', 'R'), (wordle_array[2], 'R')))]
+                           for tape1_symbol in wa_wout_input}
+                    },
+                    'q3': {
+                        (wordle_array[3], '#'): [('q4', (('1', 'R'), ('-', 'R')))],
+                        **{(tape1_symbol, '#'): [('q4', ((tape1_symbol, 'R'), (wordle_array[3], 'R')))]
+                           for tape1_symbol in (wordle_set - set(wordle_array[3]))},
+                        **{(tape1_symbol, '#'): [('q4', (('0', 'R'), (wordle_array[3], 'R')))]
+                           for tape1_symbol in wa_wout_input}
+                    },
+                    'q4': {
+                        (wordle_array[4], '#'): [('q5', (('1', 'N'), ('-', 'N')))],
+                        **{(tape1_symbol, '#'): [('q5', ((tape1_symbol, 'N'), (wordle_array[4], 'N')))]
+                           for tape1_symbol in (wordle_set - set(wordle_array[4]))},
+                        **{(tape1_symbol, '#'): [('q5', (('0', 'N'), (wordle_array[4], 'N')))]
+                           for tape1_symbol in wa_wout_input}
+                    },
+                    'q5': {
+                        ('#','#'): [('q6', (('#','R'), ('#', 'R')))],
+                        **{(tape1_symbol, tape2_symbol): [('q5', ((tape1_symbol, 'L'), (tape2_symbol, 'L')))]
+                           for tape1_symbol in tape_alphabet - {'#','-'}
+                           for tape2_symbol in tape_alphabet - {'#','0','1','2'}},
+                        **{(tape1_symbol, '#'): [('q5', ((tape1_symbol, 'L'), ('#', 'N')))]
+                           for tape1_symbol in tape_alphabet - {'#','-'}},
+                        **{('#', tape2_symbol): [('q5', (('#', 'N'), (tape2_symbol, 'L')))]
+                           for tape2_symbol in tape_alphabet - {'#','0','1','2'}},
+                    },
+                    'q6':{
+                        **{('0', tape2_symbol): [('q6', (('0', 'R'), (tape2_symbol,'N')))]
+                           for tape2_symbol in tape_alphabet - {'#'}},
+                        **{('1', tape2_symbol): [('q6', (('1', 'R'), (tape2_symbol, 'N')))]
+                           for tape2_symbol in tape_alphabet - {'#'}},
+                        **{('2', tape2_symbol): [('q6', (('2', 'R'), (tape2_symbol, 'N')))]
+                           for tape2_symbol in tape_alphabet - {'#'}},
+                        **{(tape1_symbol, tape2_symbol): [('q7', ((tape1_symbol, 'N'), (tape2_symbol, 'N')))]
+                           for tape1_symbol in wordle_alphabet
+                           for tape2_symbol in tape_alphabet - {'#'}},
+                        **{('#', tape2_symbol): [('q8', (('#', 'N'), (tape2_symbol, 'N')))]
+                           for tape2_symbol in tape_alphabet - {'#'}}
+                    },
+                    'q7':{
+                        **{(tapeX_symbol, tapeX_symbol): [('q5', (('2', 'N'), ('-', 'N')))]
+                           for tapeX_symbol in tape_alphabet - {'#'}},
+                        **{(tape1_symbol, tape2_symbol): [('q7', ((tape1_symbol, 'N'), (tape2_symbol, 'R')))]
+                           for tape1_symbol in wordle_alphabet
+                           for tape2_symbol in tape_alphabet - {'#'}
+                           if tape1_symbol != tape2_symbol},
+                        **{(tape1_symbol, '#'): [('q5', (('0','N'), ('#', 'L')))]
+                           for tape1_symbol in wordle_alphabet}
+                    }
                 },
-                'q1':{
-                    (wordle_array[1], '#'): [('q2', (('1', 'R'), ('-', 'R')))],
-                    **{(current_symbol, '#'): [('q2', ((current_symbol, 'R'), (wordle_array[1], 'R')))]
-                       for current_symbol in (wordle_set - set(wordle_array[1]))},
-                    **{(current_symbol, '#'): [('q2', (('0', 'R'), (wordle_array[1], 'R')))]
-                       for current_symbol in wa_wout_input}
-                },
-                'q2': {
-                    (wordle_array[2], '#'): [('q3', (('1', 'R'), ('-', 'R')))],
-                    **{(current_symbol, '#'): [('q3', ((current_symbol, 'R'), (wordle_array[2], 'R')))]
-                       for current_symbol in (wordle_set - set(wordle_array[2]))},
-                    **{(current_symbol, '#'): [('q3', (('0', 'R'), (wordle_array[2], 'R')))]
-                       for current_symbol in wa_wout_input}
-                },
-                'q3': {
-                    (wordle_array[3], '#'): [('q4', (('1', 'R'), ('-', 'R')))],
-                    **{(current_symbol, '#'): [('q4', ((current_symbol, 'R'), (wordle_array[3], 'R')))]
-                       for current_symbol in (wordle_set - set(wordle_array[3]))},
-                    **{(current_symbol, '#'): [('q4', (('0', 'R'), (wordle_array[3], 'R')))]
-                       for current_symbol in wa_wout_input}
-                },
-                'q4': {
-                    (wordle_array[4], '#'): [('q5', (('1', 'R'), ('-', 'R')))],
-                    **{(current_symbol, '#'): [('q5', ((current_symbol, 'R'), (wordle_array[4], 'R')))]
-                       for current_symbol in (wordle_set - set(wordle_array[4]))},
-                    **{(current_symbol, '#'): [('q5', (('0', 'R'), (wordle_array[4], 'R')))]
-                       for current_symbol in wa_wout_input}
-                },
-            },
-            initial_state='q0',
-            blank_symbol='#',
-            final_states={'q5'}
-        )
+                initial_state='q0',
+                blank_symbol='#',
+                final_states={'q8'},
+            )
+        except Exception as e:
+            print(f'Error: {e}')
 
         return wordle_tm
 
@@ -86,12 +122,10 @@ def Wordle_Turing_Machine(wordle_input):
 
 def Turing_Machine_Calling(input_str, wordle_input):
 
-    try:
+    if(len(input_str) == 5):
         input_str = input_str.lower()
         wordle_tm = Wordle_Turing_Machine(wordle_input)
 
-        wordle_tm_result=wordle_tm.read_input(input_str)
-        print(wordle_tm_result)
-
-    except Exception as e:
-        print(f'Error: {e}')
+        wordle_tm.read_input(input_str).pop().print()
+    else:
+        print('La palabra ingresada no es válida')
