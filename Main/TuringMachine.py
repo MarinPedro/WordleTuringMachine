@@ -23,7 +23,7 @@ def Wordle_Turing_Machine(wordle_input):
 
         # Creación de un vector que contiene todos los elementos del alfabeto excepto aquellos que forman
         # la cadena del wordle
-        wa_wout_input = list(tape_alphabet - set(wordle_array))
+        wa_wout_input = list(tape_alphabet - wordle_set)
 
         # Creación de la máquina de Turing
         try:
@@ -72,6 +72,7 @@ def Wordle_Turing_Machine(wordle_input):
                            for tape1_symbol in wa_wout_input}
                     },
                     'q5': {
+                        # Si el símbolo de ambas cintas es blanco, es porque llegaron al inicio de la cinta
                         ('#','#'): [('q6', (('#','R'), ('#', 'R')))],
                         **{(tape1_symbol, tape2_symbol): [('q5', ((tape1_symbol, 'L'), (tape2_symbol, 'L')))]
                            for tape1_symbol in tape_alphabet - {'#','-'}
@@ -79,27 +80,27 @@ def Wordle_Turing_Machine(wordle_input):
                         **{(tape1_symbol, '#'): [('q5', ((tape1_symbol, 'L'), ('#', 'N')))]
                            for tape1_symbol in tape_alphabet - {'#','-'}},
                         **{('#', tape2_symbol): [('q5', (('#', 'N'), (tape2_symbol, 'L')))]
-                           for tape2_symbol in tape_alphabet - {'#','0','1','2'}},
+                           for tape2_symbol in tape_alphabet - {'#','0','1','2'}}
                     },
                     'q6':{
                         **{('0', tape2_symbol): [('q6', (('0', 'R'), (tape2_symbol,'N')))]
-                           for tape2_symbol in tape_alphabet - {'#'}},
+                           for tape2_symbol in tape_alphabet - {'#','0','1','2'}},
                         **{('1', tape2_symbol): [('q6', (('1', 'R'), (tape2_symbol, 'N')))]
-                           for tape2_symbol in tape_alphabet - {'#'}},
+                           for tape2_symbol in tape_alphabet - {'#','0','1','2'}},
                         **{('2', tape2_symbol): [('q6', (('2', 'R'), (tape2_symbol, 'N')))]
-                           for tape2_symbol in tape_alphabet - {'#'}},
+                           for tape2_symbol in tape_alphabet - {'#','0','1','2'}},
                         **{(tape1_symbol, tape2_symbol): [('q7', ((tape1_symbol, 'N'), (tape2_symbol, 'N')))]
                            for tape1_symbol in wordle_alphabet
-                           for tape2_symbol in tape_alphabet - {'#'}},
+                           for tape2_symbol in tape_alphabet - {'#','0','1','2'}},
                         **{('#', tape2_symbol): [('q8', (('#', 'N'), (tape2_symbol, 'N')))]
-                           for tape2_symbol in tape_alphabet - {'#'}}
+                           for tape2_symbol in tape_alphabet - {'#','0','1','2'}}
                     },
                     'q7':{
                         **{(tapeX_symbol, tapeX_symbol): [('q5', (('2', 'N'), ('-', 'N')))]
                            for tapeX_symbol in tape_alphabet - {'#'}},
                         **{(tape1_symbol, tape2_symbol): [('q7', ((tape1_symbol, 'N'), (tape2_symbol, 'R')))]
                            for tape1_symbol in wordle_alphabet
-                           for tape2_symbol in tape_alphabet - {'#'}
+                           for tape2_symbol in tape_alphabet - {'#','0','1','2'}
                            if tape1_symbol != tape2_symbol},
                         **{(tape1_symbol, '#'): [('q5', (('0','N'), ('#', 'L')))]
                            for tape1_symbol in wordle_alphabet}
