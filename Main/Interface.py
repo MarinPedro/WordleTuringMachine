@@ -71,7 +71,7 @@ class WordleGUI:
                         self.casillas[r][c][0].configure(bg="#878A8C")
                     else:
                         self.casillas[r][c][0].configure(bg="#D3D6DA")
-        # Aplicar borde morado exclusivamente a la celda vacía actual enfocada
+        # Aplicar borde morado exclusivamente a la celda vacía actual
         if self.fila_actual < 6 and self.col_actual < 5:
             self.casillas[self.fila_actual][self.col_actual][0].configure(bg="#800080")
     def teclado_fisico(self, event):
@@ -104,7 +104,7 @@ class WordleGUI:
         # Llamar a la MT
         resultado_mt = Turing_Machine_Calling(palabra_ingresada, self.palabra_objetivo)
         if not resultado_mt or len(resultado_mt) < 5:
-            messagebox.showwarning("Error", "La simulación del autómata no retornó una configuración válida.")
+            messagebox.showwarning("Error", "No retornó una configuración válida.")
             return
         COLOR_VERDE = "#6AAA64"
         COLOR_AMARILLO = "#C9B458"
