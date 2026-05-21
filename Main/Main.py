@@ -3,7 +3,7 @@ import random
 import os
 
 def main():
-    ruta = os.path.join(os.path.dirname(__file__), "Words.txt")
+    ruta = os.path.join(os.path.dirname(_file_), "..", "Words.txt")
     with open(ruta, "r") as f:
         palabras = [line.strip() for line in f if line.strip()]
     palabra_secreta = random.choice(palabras)
