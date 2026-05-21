@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import font, messagebox
 import random
-from Words import words
+import os
 from TuringMachine import Turing_Machine_Calling
 class WordleGUI:
     def __init__(self, root):
@@ -11,7 +11,10 @@ class WordleGUI:
         self.root.resizable(True, True)
         self.root.state('zoomed') # para que la ventana se abra maximizada
         # Escoger una palabra aleatoria
-        self.palabra_objetivo = random.choice(words).lower()
+        ruta = os.path.join(os.path.dirname(__file__), "Words.txt")
+        with open(ruta, "r") as f:
+            palabras = [line.strip() for line in f if line.strip()]
+        self.palabra_objetivo = random.choice(palabras).lower()
         self.fila_actual = 0
         self.col_actual = 0
         self.casillas = []
