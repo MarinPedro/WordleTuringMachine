@@ -1,9 +1,12 @@
 from TuringMachine import Turing_Machine_Calling
 import random
-from Words import words
+import os
 
 def main():
-    palabra_secreta = random.choice(words)
+    ruta = os.path.join(os.path.dirname(__file__), "Words.txt")
+    with open(ruta, "r") as f:
+        palabras = [line.strip() for line in f if line.strip()]
+    palabra_secreta = random.choice(palabras)
     intentos = 6
     for i in range(intentos):
         palabra = input(f"Intento {i+1}/{intentos} - Ingresa una palabra de 5 letras: ")
