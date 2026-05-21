@@ -10,11 +10,8 @@ class WordleGUI:
         self.root.configure(bg="#FFFFFF") # fondo blanco
         self.root.resizable(True, True)
         self.root.state('zoomed') # para que la ventana se abra maximizada
-        # Escoger una palabra aleatoria
-        ruta = os.path.join(os.path.dirname(__file__), "Words.txt")
-        with open(ruta, "r") as f:
-            palabras = [line.strip() for line in f if line.strip()]
-        self.palabra_objetivo = random.choice(palabras).lower()
+        self.cargar_palabras()
+        self.palabra_objetivo = random.choice(self.palabras).lower()
         self.fila_actual = 0
         self.col_actual = 0
         self.casillas = []
@@ -71,7 +68,7 @@ class WordleGUI:
                         self.casillas[r][c][0].configure(bg="#878A8C")
                     else:
                         self.casillas[r][c][0].configure(bg="#D3D6DA")
-        # Aplicar borde morado exclusivamente a la celda vacía actual
+        # Aplicar borde morado exclusivamente a la celda vacía actual enfocada
         if self.fila_actual < 6 and self.col_actual < 5:
             self.casillas[self.fila_actual][self.col_actual][0].configure(bg="#800080")
     def teclado_fisico(self, event):
@@ -104,7 +101,7 @@ class WordleGUI:
         # Llamar a la MT
         resultado_mt = Turing_Machine_Calling(palabra_ingresada, self.palabra_objetivo)
         if not resultado_mt or len(resultado_mt) < 5:
-            messagebox.showwarning("Error", "No retornó una configuración válida.")
+            messagebox.showwarning("Error", "La simulación del autómata no retornó una configuración válida.")
             return
         COLOR_VERDE = "#6AAA64"
         COLOR_AMARILLO = "#C9B458"
@@ -123,11 +120,13 @@ class WordleGUI:
             lbl_letra.configure(bg=color_final, fg="#FFFFFF")
         # Validar el intento
         if palabra_ingresada == self.palabra_objetivo:
-            messagebox.showinfo("¡Genial!")
             self.root.unbind("<Key>")
+            if messagebox.askyesno("¡Ganaste!", f"¡Adivinaste! La palabra era {self.palabra_objetivo.upper()}\n¿Quieres jugar de nuevo?"):
+                self.reiniciar_juego()
         elif self.fila_actual == 5:
-            messagebox.showinfo("Fin del juego", f"Se agotaron los intentos. La palabra era: {self.palabra_objetivo.upper()}")
             self.root.unbind("<Key>")
+            if messagebox.askyesno("Fin del juego", f"Se agotaron los intentos. La palabra era: {self.palabra_objetivo.upper()}\n¿Quieres jugar de nuevo?"):
+                self.reiniciar_juego()
         else:
             # Pasar al siguiente intento
             self.fila_actual += 1
@@ -136,6 +135,23 @@ class WordleGUI:
             # Actualizar el contador dinámico de intentos
             self.lbl_intentos.configure(text=f"Intento: {self.fila_actual + 1} / 6")
 
+    def cargar_palabras(self):
+        ruta = os.path.join(os.path.dirname(__file__), "Words.txt")
+        with open(ruta, "r") as f:
+            self.palabras = [line.strip() for line in f if line.strip()]
+
+    def reiniciar_juego(self):
+        self.palabra_objetivo = random.choice(self.palabras).lower()
+        self.fila_actual = 0
+        self.col_actual = 0
+        for r in range(6):
+            for c in range(5):
+                frame_borde, lbl_letra = self.casillas[r][c]
+                lbl_letra.configure(text="", bg="#FFFFFF", fg="#000000")
+                frame_borde.configure(bg="#D3D6DA")
+        self.lbl_intentos.configure(text="Intento: 1 / 6")
+        self.actualizar_borde_morado()
+        self.root.bind("<Key>", self.teclado_fisico)
 
 if __name__ == "__main__":
     root = tk.Tk()
