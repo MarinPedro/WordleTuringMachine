@@ -9,7 +9,13 @@ class WordleGUI:
         self.root.title("Wordle TM")
         self.root.configure(bg="#FFFFFF") # fondo blanco
         self.root.resizable(True, True)
-        self.root.state('zoomed') # para que la ventana se abra maximizada
+        try:
+            self.root.state('zoomed') # para que la ventana se abra maximizada
+        except tk.TclError:
+            try:
+                self.root.attributes('-zoomed', True)
+            except tk.TclError:
+                pass
         self.cargar_palabras()
         self.palabra_objetivo = random.choice(self.palabras).lower()
         self.fila_actual = 0
