@@ -2,14 +2,24 @@ import tkinter as tk
 from tkinter import font, messagebox  #font nos permite elegir el tipo de letra y messagebox nos permite mostrar mensajes a través de una ventana emergente
 import random  #para escoger la palabra secreta de forma aleatoria
 import os
+import platform
+
+
 from TuringMachine import Turing_Machine_Calling
 class WordleGUI:
-    def __init__(self, root):   #root es la ventana de Tkinter
+    def __init__(self, root):
+        so = platform.system()
+        #root es la ventana de Tkinter
         self.root = root
         self.root.title("Wordle TM")
         self.root.configure(bg="#FFFFFF") # la ventana tiene fondo blanco
         self.root.resizable(True, True) # le indica al gestor de ventanas que SÍ se puede redimensionar en ancho y en alto
-        self.root.state('zoomed') #para que la ventana esté maximizada desde el principio
+        if so == 'Windows':
+            self.root.state('zoomed')
+        elif so == 'Linux':
+            self.root.attributes('-zoomed', True)
+        elif so == 'Darwin':  # Mac
+            self.root.attributes('-fullscreen', True) #para que la ventana esté maximizada desde el principio
         self.cargar_palabras()
         self.palabra_secreta = random.choice(self.palabras).lower()  #elige la palabra al azar y la convierte en minúsculas
         self.fila_actual = 0
