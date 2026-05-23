@@ -132,11 +132,16 @@ def Wordle_Turing_Machine(wordle_input):
 
 
 def Turing_Machine_Calling(input_str, wordle_input):
-
-    if(len(input_str) == 5):
+    if len(input_str) == 5:
         input_str = input_str.lower()
         wordle_tm = Wordle_Turing_Machine(wordle_input)
-
-        wordle_tm.read_input(input_str).pop().print()
+        
+        # Leemos la configuración final de la MT
+        final_config = wordle_tm.read_input(input_str).pop()
+        
+        # Extraemos lo que quedó escrito en la primera cinta (Tapes[0])
+        # Filtramos para obtener solo los '0', '1' y '2' correspondientes a las 5 letras
+        tape_result = [char for char in final_config.tapes[0].tape if char in ['0', '1', '2']]
+        return tape_result
     else:
-        print('La palabra ingresada no es válida')
+        return None
