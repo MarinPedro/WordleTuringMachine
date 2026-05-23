@@ -6,13 +6,13 @@ def Wordle_Turing_Machine(wordle_input):
     """
     La máquina de Turing siempre cambiará según la cadena del Wordle,
     por ende, no es viable usar una máquina de Turing ya predefinida,
-    sino una que se adapte según dicha cadena. Debido a esto,es necesario
+    sino una que se adapte según dicha cadena. Debido a esto, es necesario
     predefinir los alfabetos y manejar las transiciones según la
     cantidad de símbolos para cada palabra, con ayuda de for's.
     """
 
     if len(wordle_input)==5:
-        # wordle_input se usara en forma de array y de conjunto, el array permitirá acceder a las
+        # wordle_input se usará en forma de array y de conjunto, el array permitirá acceder a las
         # posiciones deseadas, y el conjunto evitará la repetición de símbolos.
         wordle_array = list(wordle_input.lower())
         wordle_set = set(wordle_input.lower())

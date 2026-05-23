@@ -215,7 +215,7 @@ class WordleGUI:
             #actualizamos el contador de intentos
             self.lbl_intentos.configure(text=f"Intento: {self.fila_actual + 1} / 6")
     def cargar_palabras(self):
-        ruta = os.path.join(os.path.dirname(__file__), "Words.txt")
+        ruta = os.path.join(os.path.dirname(__file__), "..", "Words.txt")
         with open(ruta, "r") as f:
             self.palabras = [line.strip() for line in f if line.strip()]
     def reiniciar_juego(self):
