@@ -24,6 +24,7 @@ class WordleGUI:
         self.palabra_secreta = random.choice(self.palabras).lower()  #elige la palabra al azar y la convierte en minúsculas
         self.fila_actual = 0
         self.col_actual = 0
+        self.juego_activo = True
         self.casillas = []
         #creamos un contenedor invisible que agrupa a todos los elementos visuales del juego
         self.botones_teclado = {}
@@ -110,6 +111,8 @@ class WordleGUI:
                 if letra_limpia not in ["ENTER", "BORRAR"]:
                     self.botones_teclado[letra_limpia] = btn
     def teclado_virtual_click(self, letra):
+        if not self.juego_activo:
+            return
         if letra == "BORRAR":
             self.borrar_letra()
         elif letra == "ENTER":
@@ -129,6 +132,8 @@ class WordleGUI:
         if self.fila_actual < 6 and self.col_actual < 5:
             self.casillas[self.fila_actual][self.col_actual][0].configure(bg="#800080")
     def teclado_fisico(self, event):
+        if not self.juego_activo:
+            return
         char = event.char.upper()
         keysym = event.keysym
         if keysym == "BackSpace":
@@ -155,6 +160,9 @@ class WordleGUI:
         palabra_ingresada = "".join(
             self.casillas[self.fila_actual][c][1].cget("text") for c in range(5)
         ).lower()
+        if palabra_ingresada not in self.conjunto_palabras:
+            messagebox.showwarning("Palabra inválida", f"'{palabra_ingresada.upper()}' no está en el diccionario")
+            return
         #llamamos a la MT
         resultado_mt = Turing_Machine_Calling(palabra_ingresada, self.palabra_secreta)
         if not resultado_mt or len(resultado_mt) < 5:
@@ -211,10 +219,12 @@ class WordleGUI:
         #validamos el intento
         if palabra_ingresada == self.palabra_secreta:
             self.root.unbind("<Key>")
+            self.juego_activo = False
             if messagebox.askyesno("¡Adiviniste!", f"La palabra era {self.palabra_secreta.upper()}\n¿Quieres jugar de nuevo?"):
                 self.reiniciar_juego()
         elif self.fila_actual == 5:
             self.root.unbind("<Key>")
+            self.juego_activo = False
             if messagebox.askyesno("Fin del juego", f"Se agotaron los intentos. La palabra era: {self.palabra_secreta.upper()}\n¿Quieres jugar de nuevo?"):
                 self.reiniciar_juego()
         else:
@@ -227,8 +237,10 @@ class WordleGUI:
     def cargar_palabras(self):
         ruta = os.path.join(os.path.dirname(__file__), "..", "Words.txt")
         with open(ruta, "r") as f:
-            self.palabras = [line.strip() for line in f if line.strip()]
+            self.palabras = [line.strip().lower() for line in f if line.strip()]
+        self.conjunto_palabras = set(self.palabras)
     def reiniciar_juego(self):
+        self.juego_activo = True
         self.palabra_secreta = random.choice(self.palabras).lower()
         self.fila_actual = 0
         self.col_actual = 0
@@ -244,8 +256,3 @@ class WordleGUI:
         self.lbl_intentos.configure(text="Intento: 1 / 6")
         self.actualizar_borde_morado()
         self.root.bind("<Key>", self.teclado_fisico)
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = WordleGUI(root)
-    root.mainloop()
