@@ -235,7 +235,7 @@ class WordleGUI:
             #actualizamos el contador de intentos
             self.lbl_intentos.configure(text=f"Intento: {self.fila_actual + 1} / 6")
     def cargar_palabras(self):
-        ruta = os.path.join(os.path.dirname(__file__), "Words.txt")
+        ruta = os.path.join(os.path.dirname(__file__), "..", "Words.txt")
         with open(ruta, "r") as f:
             self.palabras = [line.strip().lower() for line in f if line.strip()]
         self.conjunto_palabras = set(self.palabras)
@@ -256,8 +256,3 @@ class WordleGUI:
         self.lbl_intentos.configure(text="Intento: 1 / 6")
         self.actualizar_borde_morado()
         self.root.bind("<Key>", self.teclado_fisico)
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = WordleGUI(root)
-    root.mainloop()
