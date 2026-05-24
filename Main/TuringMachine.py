@@ -27,6 +27,7 @@ def Wordle_Turing_Machine(wordle_input):
 
         # Creación de la máquina de Turing
         try:
+            wordle_tm=None
             wordle_tm = MNTM(
                 states={'q0', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'},
                 input_symbols= wordle_alphabet,
@@ -122,6 +123,7 @@ def Wordle_Turing_Machine(wordle_input):
             )
         except Exception as e:
             print(f'Error: {e}')
+            return None
 
         return wordle_tm
 

@@ -220,7 +220,7 @@ class WordleGUI:
         if palabra_ingresada == self.palabra_secreta:
             self.root.unbind("<Key>")
             self.juego_activo = False
-            if messagebox.askyesno("¡Adiviniste!", f"La palabra era {self.palabra_secreta.upper()}\n¿Quieres jugar de nuevo?"):
+            if messagebox.askyesno("¡Adivinaste!", f"La palabra era {self.palabra_secreta.upper()}\n¿Quieres jugar de nuevo?"):
                 self.reiniciar_juego()
         elif self.fila_actual == 5:
             self.root.unbind("<Key>")
@@ -236,7 +236,7 @@ class WordleGUI:
             self.lbl_intentos.configure(text=f"Intento: {self.fila_actual + 1} / 6")
     def cargar_palabras(self):
         ruta = os.path.join(os.path.dirname(__file__), "..", "Words.txt")
-        with open(ruta, "r") as f:
+        with open(ruta, "r", encoding="utf-8") as f:
             self.palabras = [line.strip().lower() for line in f if line.strip()]
         self.conjunto_palabras = set(self.palabras)
     def reiniciar_juego(self):
