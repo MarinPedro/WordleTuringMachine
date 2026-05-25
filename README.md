@@ -101,31 +101,31 @@ El proyecto también usa tkinter para los elementos de la interfaz gráfica. Par
 
 - Para verificar si tu sistema tiene instaladas las dependencias de tkinter, ejecuta el siguiente comando:
   
-```bash
-python3 -m tkinter
-```
+  ```bash
+  python3 -m tkinter
+  ```
   
   Esto verificará las dependencias de tkinter. Si están instaladas correctamente, puedes directamente ejecutar el projecto. Si no, puedes descargarlas con los siguientes comandos según tu sistema:
   - Linux (Debian/Ubuntu/Linux Mint):
-    
-  ```bash
-  sudo apt install python3-tk
-  ```
+  
+    ```bash
+    sudo apt install python3-tk
+    ```
   - Linux (Fedora):
-    
-  ```bash
-  sudo dnf install python3-tkinter
-  ```
+  
+    ```bash
+    sudo dnf install python3-tkinter
+    ```
   - Linux (Arch):
     
-  ```bash
-  sudo pacman -S tk
-  ```
+    ```bash
+    sudo pacman -S tk
+    ```
   - MacOS (instalación con Homebrew):
     
-  ```bash
-  brew install python-tk
-  ```
+    ```bash
+    brew install python-tk
+    ```
   - MacOS (instalación desde python.org): tkinter viene incluido, no se necesita ningún comando
     
 Una vez descargadas las dependencias de tkinter y automata-lib, ejecuta los siguientes comandos:
